@@ -29,8 +29,8 @@ function deleteCard(cardElement) {
 // @todo: Вывести карточки на страницу
 function renderCards(Cards) {
     Cards.forEach(function (Data) {
-        const cardElement = createCard(Data, deleteCard);
-        cardContainer.append(cardElement);
+        const renderCard = createCard(Data, deleteCard);
+        cardContainer.append(renderCard);
     });
 }
 
