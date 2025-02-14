@@ -1,11 +1,5 @@
-import {
-  cardTemplate,
-  cardContainer,
-  popupTypeAdd,
-  addNameInput,
-  addLinkInput,
-} from "../index";
-import { closeModal, openImagePopup } from "./modal";
+const cardTemplate = document.querySelector("#card-template").content;
+
 export const createCard = (Data, cardDelete, cardLike, openImagePopup) => {
   const cardElement = cardTemplate.querySelector(".places__item").cloneNode(true);
 
@@ -36,28 +30,4 @@ export const deleteCard = (item) => {
 
 export const handleLike = (item) => {
   item.classList.toggle("card__like-button_is-active");
-};
-
-export const renderCards = (Cards) => {
-  Cards.forEach((Data) => {
-    const renderCard = createCard(Data, deleteCard, handleLike, openImagePopup);
-    cardContainer.append(renderCard);
-  });
-};
-
-export const handleAddCardSubmit = (evt) => {
-  evt.preventDefault();
-
-  const newCardData = {
-    name: addNameInput.value,
-    link: addLinkInput.value,
-  };
-
-  const newCardElement = createCard(newCardData, deleteCard, handleLike, openImagePopup);
-  cardContainer.prepend(newCardElement);
-
-  closeModal(popupTypeAdd);
-
-  addNameInput.value = "";
-  addLinkInput.value = "";
 };

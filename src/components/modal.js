@@ -1,11 +1,3 @@
-import {
-  popupTypeImage,
-  popupTypeEdit,
-  nameInput,
-  descriptionInput,
-  profileName,
-  profileDescription,
-} from "../index";
 
 export const handleEscKeyUp = (e) => {
   if (e.key === "Escape") {
@@ -37,24 +29,4 @@ export const eventListener = (popupElement) => {
       closeModal(popupElement);
     }
   });
-};
-
-export const openImagePopup = (imageSrc, imageAlt) => {
-  const popupImage = popupTypeImage.querySelector(".popup__image");
-  const popupCaption = popupTypeImage.querySelector(".popup__caption");
-
-  popupImage.src = imageSrc;
-  popupImage.alt = imageAlt;
-  popupCaption.textContent = imageAlt;
-
-  openModal(popupTypeImage);
-};
-
-export const handleFormSubmit = (evt) => {
-  evt.preventDefault();
-
-  profileName.textContent = nameInput.value;
-  profileDescription.textContent = descriptionInput.value;
-
-  closeModal(popupTypeEdit);
 };
