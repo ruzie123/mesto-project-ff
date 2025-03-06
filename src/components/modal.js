@@ -22,6 +22,7 @@ export const eventListener = (popupElement) => {
   const closeButton = popupElement.querySelector(".popup__close");
   closeButton.addEventListener("click", () => {
     closeModal(popupElement);
+
   });
 
   popupElement.addEventListener("mousedown", (event) => {
