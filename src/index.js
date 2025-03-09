@@ -1,6 +1,6 @@
 import "./pages/index.css";
 import { createCard, deleteCard, handleLike } from "./components/card";
-import { openModal, eventListener, closeModal } from "./components/modal";
+import { openModal, setCloseModalWindowEventListeners, closeModal } from "./components/modal";
 import {enableValidation, validationConfig, clearValidation} from "./components/validation";
 import {getProfileData, getCards, saveUpdateProfile, addNewCard, updateAvatar} from "./components/api";
 
@@ -18,7 +18,7 @@ const profileDescription = document.querySelector(".profile__description");
 const profileAvatar = document.querySelector(".profile__image");
 
 const addFormElement = document.querySelector(".popup__form-add");
-const editformElement = document.querySelector(".popup__form-edit");
+const editFormElement = document.querySelector(".popup__form-edit");
 
 const editProfileButton = document.querySelector(".profile__edit-button");
 const addCardButton = document.querySelector(".profile__add-button");
@@ -81,18 +81,24 @@ const handleAddCardSubmit = (evt) => {
 
   addNewCard(addNameInput.value, addLinkInput.value)
   .then((data) => {
-      addNameInput.textContent = data.name;
-      addLinkInput.textContent = data.link;
+      addNameInput.value = data.name;
+      addLinkInput.value = data.link;
       
       const newCardElement = createCard(
         data,
         deleteCard,
         handleLike,
-        data.owner._id
+        openImagePopup,
+        userId
       );
       cardContainer.prepend(newCardElement);
 
       closeModal(popupTypeAdd);
+
+      addFormElement.reset()
+
+      clearValidation(addFormElement, validationConfig);
+      console.log(data)
     }
   ).catch((err) => {
     console.log(err);
@@ -100,11 +106,6 @@ const handleAddCardSubmit = (evt) => {
   .finally(() => {
     renderLoading(false, popupButtonTypeAdd)
   })
-
-  addNameInput.value = "";
-  addLinkInput.value = "";
-
-  clearValidation(addFormElement, validationConfig);
 };
 
 const handleProfileFormSubmit = (evt) => {
@@ -135,35 +136,38 @@ editProfileButton.addEventListener("click", () => {
   nameInput.value = profileName.textContent;
   descriptionInput.value = profileDescription.textContent;
 
-  clearValidation(editformElement, validationConfig);
+  clearValidation(editFormElement, validationConfig);
 });
 addCardButton.addEventListener("click", () => openModal(popupTypeAdd));
 
 avatarButton.addEventListener("click", () => openModal(popupTypeAvatar))
 
-editformElement.addEventListener("submit", handleProfileFormSubmit);
+editFormElement.addEventListener("submit", handleProfileFormSubmit);
 
 addFormElement.addEventListener("submit", handleAddCardSubmit);
 
 avatarFormElement.addEventListener("submit", handleChangeAvatarSubmit)
 
-eventListener(popupTypeEdit);
-eventListener(popupTypeAdd);
-eventListener(popupTypeImage);
-eventListener(popupTypeAvatar)
+setCloseModalWindowEventListeners(popupTypeEdit);
+setCloseModalWindowEventListeners(popupTypeAdd);
+setCloseModalWindowEventListeners(popupTypeImage);
+setCloseModalWindowEventListeners(popupTypeAvatar)
 
 enableValidation(validationConfig);
+
+let userId
 
 Promise.all([getProfileData(), getCards()])
 .then(([userData, cardsData]) => {
   updateProfile(userData);
+userId = userData._id;
   cardsData.forEach((card) => {
     const renderCard = createCard(
       card,
       deleteCard,
       handleLike,
       openImagePopup,
-      userData._id
+      userId
     );
     cardContainer.append(renderCard);
   });
